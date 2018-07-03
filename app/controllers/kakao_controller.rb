@@ -1,9 +1,24 @@
+require 'parse'
+  
 class KakaoController < ApplicationController
+
+  def friend_add
+    User.create(user_key: params[:user_key], chat_room: 0)
+    render nothing: true
+  end
   
-  require 'httparty'
-  require 'nokogiri'
-  require 'rest-client'
+  def friend_delete
+    User.find_by(user_key: params[:user_key]).destroy
+    render nothing: true
+  end
   
+  def chat_room
+    user = User.find_by(user_key: params[:user_key])
+    user.plus
+    user.save
+    render nothing: true
+  end
+
   def keyboard
     @keyboard = {
       :type => "buttons",
@@ -21,13 +36,7 @@ class KakaoController < ApplicationController
     elsif @user_msg == "Lotto"
       @text = (1..45).to_a.sample(6).sort.to_s
     elsif @user_msg == "Cat"
-    
-      @url = "http://thecatapi.com/api/images/get?format=xml&type=jpg"
-      
-      @cat_xml = RestClient.get(@url)
-      @cat_doc = Nokogiri::XML(@cat_xml)
-      @cat_url = @cat_doc.xpath('//url').text
-      @text = @cat_url
+      @cat_url = Parse::Animal.cat
     end
     
     @return_msg = {
@@ -61,4 +70,6 @@ class KakaoController < ApplicationController
     end
     render json: @result
   end
+  
+  
 end

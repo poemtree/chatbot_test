@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # 루비 버전 수정
 ruby '2.3.4'
-
+gem 'rails_db'
 gem 'httparty'
 gem 'rest-client'
 gem 'nokogiri'
